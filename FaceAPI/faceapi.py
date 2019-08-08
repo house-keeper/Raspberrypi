@@ -7,6 +7,7 @@ import identify
 import addPerson
 import addFace
 import train
+import findName
 
 import pymysql.cursors
 
@@ -35,7 +36,7 @@ def insert(outsider_name):
         print(" ")                             
                              
                              
-photo = "http://img.etoday.co.kr/pto_db/2018/02/20180208110851_1184805_600_818.jpg"
+photo = "http://photo.hankooki.com/arch/photo/P/2019/05/23/20190523184948_P_00_C_1_236.jpg"
 personGroupId = "db-test"
 
 
@@ -48,11 +49,12 @@ confidence = identify.confidence_func(faceId, personGroupId)
 if confidence >= 0.7 :
 	personId = identify.func(faceId, personGroupId)
 	print("identify.py / personId => %s" % personId)
-	insert("outsider2-test")[{"personIhttp://img.etoday.co.kr/pto_db/2018/02/20180208110851_1184805_600_818.jpgd":"059962a5-cf8d-494a-a304-60b62b4a2e96","persistedFaceIds":["ebae0ced-3f45-4b79-aaa6-b8580582d453"],"name":"outsider1-test","userData":"User-provided data attached to the person."},{"personId":"24e81737-9640-4457-9749-788b5f8b812d","persistedFaceIds":[],"name":"outsider2-test","userData":"User-provided data attached to the person."},{"personId":"3ba8f355-4ac2-4e95-b353-181812b21405","persistedFaceIds":["1f1a06b5-8d3e-404c-8765-b8e1c67fb632"],"name":"outsider2-test","userData":"User-provided data attached to the person."}]
-
+	outsider_name = findName.func(personId, personGroupId)
+	insert(outsider_name)
 	
 elif confidence < 0.7 :
 	print("confidence is too lowwwwwwwww")
+	# TODO: name modify plz!!!!! auto increment
 	outsider_name = "outsider3-test"
 	personId = addPerson.func(personGroupId, outsider_name)
 	print("addPerson.py / personId => %s" % personId)

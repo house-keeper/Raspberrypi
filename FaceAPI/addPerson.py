@@ -1,7 +1,7 @@
 import httplib, urllib, base64
 import json
 
-def func():
+def func(personGroupId, outsider_name):
     
     headers = {
         # Request headers
@@ -11,7 +11,7 @@ def func():
     
     #TODO: person name edit plz!!!!!!!!!!!!
     body = {
-        "name": "outsider",
+        "name": outsider_name,
         "userData": "User-provided data attached to the person."
     }
 
@@ -20,7 +20,7 @@ def func():
 
     try:
         conn = httplib.HTTPSConnection('koreacentral.api.cognitive.microsoft.com')
-        conn.request("POST", "/face/v1.0/persongroups/housekeeper-python/persons?%s" % params, str(body), headers)
+        conn.request("POST", "/face/v1.0/persongroups/%s/persons?%s" % (personGroupId, params), str(body), headers)
         response = conn.getresponse()
         data = response.read()
         #print(data)

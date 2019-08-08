@@ -14,7 +14,7 @@ headers = {
 }
 
 params = urllib.urlencode({
-    'personGroupId': 'housekeeper-python'
+    'personGroupId': 'db-test'
 })
 
 try:

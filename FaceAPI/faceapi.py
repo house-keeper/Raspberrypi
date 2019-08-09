@@ -36,7 +36,7 @@ def insert(outsider_name):
         print(" ")                             
                              
                              
-photo = "http://file.mk.co.kr/meet/neds/2018/10/image_readtop_2018_658053_15401907163502748.jpg"
+photo = "/home/pi/Outsider/outsider_2019-08-08_08-26-38.jpg"
 personGroupId = "db-test"
 
 

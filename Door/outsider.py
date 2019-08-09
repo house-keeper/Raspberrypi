@@ -1,5 +1,9 @@
 import sys
 sys.path.append('/home/pi/Outsider/aws')
+import aws_config
+sys.path.append('/home/pi/Raspberrypi/FaceAPI')
+import faceapi_outsider
+
 import time
 import RPi.GPIO as GPIO
 from datetime import datetime
@@ -9,7 +13,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 
 import pymysql.cursors
-import aws_config
+
 
 # connect to the database
 conn = pymysql.connect(host='jsmdbinstance.cmunz4rplqqo.ap-northeast-2.rds.amazonaws.com',
@@ -29,6 +33,8 @@ def take_a_picture():
     with picamera.PiCamera() as camera:
         camera.resolution = (320,240)
         camera.capture(camera_filename)
+        
+    print("Take a picture success")
     
         
 # upload to s3 bucket
@@ -44,21 +50,21 @@ def upload_to_aws(local_file, bucket, s3_file):
         print("Credentials Error")
         return False
 
-
+'''
 # outsider detected, insert mysql database
-def insert(filename, nowtime):
+def insert(s3_url_name, nowtime):
 
     try:
         with conn.cursor() as cursor:
             sql = "INSERT INTO outsider (photo, time) VALUES (%s, %s)"
-            cursor.execute(sql, ("https://housekeeper.s3.ap-northeast-2.amazonaws.com/" + filename, nowtime))
+            cursor.execute(sql, (s3_url_name, nowtime))
             conn.commit()
             #result = cursor.fetchone()
             print("DB insert success")
     finally:
         #conn.close()
         print(" ")
-
+'''
 
 # main
 # ultrasonic sensor
@@ -97,13 +103,15 @@ try:
             nowtime = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
             filename = 'outsider_' + datetime.today().strftime("%Y-%m-%d_%H-%M-%S") + '.jpg'
             camera_filename = "/home/pi/Outsider/" + filename
+            s3_url_name = "https://housekeeper.s3.ap-northeast-2.amazonaws.com/" + filename
 
             print("Outsider is detected!")
             
             #with picamera.PiCamera() as camera:
             take_a_picture()
             upload_to_aws(camera_filename, 'housekeeper', filename) # (local_file, bucket, s3_file)
-            insert(filename, nowtime)
+            #insert(filename, nowtime)
+            faceapi_outsider.func(s3_url_name, nowtime)
             
             time.sleep(0.1)
             

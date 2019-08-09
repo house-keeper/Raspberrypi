@@ -8,6 +8,7 @@ import addPerson
 import addFace
 import train
 import findName
+import findNumber
 
 import pymysql.cursors
 
@@ -20,7 +21,6 @@ conn = pymysql.connect(host='jsmdbinstance.cmunz4rplqqo.ap-northeast-2.rds.amazo
                              )
                            
                            
-                             
 # outsider detected, insert mysql database
 def insert(outsider_name):
 
@@ -36,38 +36,48 @@ def insert(outsider_name):
         print(" ")                             
                              
                              
-photo = "http://photo.hankooki.com/arch/photo/P/2019/05/23/20190523184948_P_00_C_1_236.jpg"
+photo = "http://file.mk.co.kr/meet/neds/2018/10/image_readtop_2018_658053_15401907163502748.jpg"
 personGroupId = "db-test"
 
 
 faceId = faceDetection.func(photo)
-print("faceDetection.py / faceId => %s" % faceId)
 
-
-confidence = identify.confidence_func(faceId, personGroupId)
-
-if confidence >= 0.7 :
-	personId = identify.func(faceId, personGroupId)
-	print("identify.py / personId => %s" % personId)
-	outsider_name = findName.func(personId, personGroupId)
-	insert(outsider_name)
+if faceId == 0 :
+	print("face cannot detected!!!")
+	insert('unknown')
 	
-elif confidence < 0.7 :
-	print("confidence is too lowwwwwwwww")
-	# TODO: name modify plz!!!!! auto increment
-	outsider_name = "outsider3-test"
-	personId = addPerson.func(personGroupId, outsider_name)
-	print("addPerson.py / personId => %s" % personId)
-	insert(outsider_name)
+else :
+	print("face detected well!!!")
+	print("faceDetection.py / faceId => %s" % faceId)
+
+	confidence = identify.confidence_func(faceId, personGroupId)
+
+	if confidence >= 0.7 :
+		personId = identify.func(faceId, personGroupId)
+		print("identify.py / personId => %s" % personId)
+		outsider_name = findName.func(personId, personGroupId)
+		insert(outsider_name)
+		
+	elif confidence < 0.7 :
+		print("confidence is too lowwwwwwwww")
+		
+		# TODO: name modify plz!!!!! auto increment
+		number = findNumber.func(personGroupId)
+		outsider_name = "outsider" + str(number + 1)
+		
+		personId = addPerson.func(personGroupId, outsider_name)
+		print("addPerson.py / personId => %s" % personId)
+		insert(outsider_name)
 
 
-# only first time / add person group 
-#personId = addPerson.func(personGroupId)
-
-persistedFaceId = addFace.func(personId, photo, personGroupId)
-print("addFace.py / persistedFaceId => %s" % persistedFaceId)
+	# only first time / add person group 
+	#personId = addPerson.func(personGroupId)
 
 
-train.func(personGroupId)
-print("=== train.py COMPLETE")
+	persistedFaceId = addFace.func(personId, photo, personGroupId)
+	print("addFace.py / persistedFaceId => %s" % persistedFaceId)
+
+
+	train.func(personGroupId)
+	print("=== train.py COMPLETE")
 

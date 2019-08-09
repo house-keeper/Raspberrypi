@@ -1,5 +1,7 @@
 import httplib, urllib, base64
 import json
+from operator import itemgetter
+import re
 
 headers = {
     # Request headers
@@ -22,6 +24,20 @@ try:
 #    print (json.dumps(data, sort_keys=True, indent=2, seperators=(',',': ')))
 #    print (json.loads(data))
     print data
+    
+    dataStream = json.loads(data)
+    
+    sortdata = sorted(dataStream, key = itemgetter('name'))
+    #print(sortdata)
+    print("lastest outsider number!!!")
+    print(sortdata[-1]['name'])
+    number = re.findall("\d+", sortdata[-1]['name'])
+    print(number[0])
+    print(type(number[0]))
+    print(type(int(number[0])))
+    print(int(number[0])+1)
+    
+    
     conn.close()
 except Exception as e:
     print("[Errno {0}] {1}".format(e.errno, e.strerror))

@@ -33,7 +33,15 @@ def func(photo):
         dataStream = json.loads(data)
         #print(dataStream[0]['faceId'])
         conn.close()
-        return dataStream[0]['faceId']
+        
+        if not dataStream :
+            #print('face cannot detected!!!')
+            #print(dataStream)
+            return 0
+        else :
+            #print('face detected well')
+            #print(data)
+            return dataStream[0]['faceId']
 
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))

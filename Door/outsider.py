@@ -1,12 +1,21 @@
-import RPi.GPIO as GPIO
+import sys
+sys.path.append('/home/pi/Outsider/aws')
+import aws_config
+sys.path.append('/home/pi/Raspberrypi/FaceAPI')
+import faceapi_outsider
+
 import time
+import RPi.GPIO as GPIO
 from datetime import datetime
 import picamera
+
 import boto3
 from botocore.exceptions import NoCredentialsError
 
 import pymysql.cursors
-# Connect to the database
+
+
+# connect to the database
 conn = pymysql.connect(host='jsmdbinstance.cmunz4rplqqo.ap-northeast-2.rds.amazonaws.com',
                              user='jsm',
                              password='jsmzzang',
@@ -14,46 +23,51 @@ conn = pymysql.connect(host='jsmdbinstance.cmunz4rplqqo.ap-northeast-2.rds.amazo
                              #, charset='CHAR_SET'
                              )
 
-AWS_ACCESS = 'AKIAXXNH6PYSFZHSFEWY'
-AWS_SECRET = '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'
-bucket_name = 'housekeeper'
+AWS_ACCESS = aws_config.aws_access_key()
+AWS_SECRET = aws_config.aws_secret_key()
+#BUCKET_NAME = 'housekeeper'
 
-filename = 'outsider ' + datetime.today().strftime("%Y-%m-%d %H:%M:%S") + '.jpg'
 
 # outsider detected, take a picture
-def takeapicture():
+def take_a_picture():
     with picamera.PiCamera() as camera:
         camera.resolution = (320,240)
-        camera.capture(filename)
+        camera.capture(camera_filename)
         
+    print("Take a picture success")
+    
+        
+# upload to s3 bucket
 def upload_to_aws(local_file, bucket, s3_file):
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS, aws_secret_access_key=AWS_SECRET)
+    s3 = boto3.client('s3', aws_access_key_id = AWS_ACCESS, aws_secret_access_key = AWS_SECRET)
     
     try:
         s3.upload_file(local_file, bucket, s3_file)
-        print("success")
+        print("S3 upload success")
         return True
     
     except NoCredentialsError:
-        print("credentials error")
+        print("Credentials Error")
         return False
 
-def insert():
-    now = datetime.now()
-    nowtime = now.strftime('%Y-%m-%d %H:%M:%S')
+'''
+# outsider detected, insert mysql database
+def insert(s3_url_name, nowtime):
 
     try:
         with conn.cursor() as cursor:
-            # Read a single record
             sql = "INSERT INTO outsider (photo, time) VALUES (%s, %s)"
-            cursor.execute(sql, (filename, nowtime))
+            cursor.execute(sql, (s3_url_name, nowtime))
             conn.commit()
             #result = cursor.fetchone()
-            print("insert success")
+            print("DB insert success")
     finally:
         #conn.close()
         print(" ")
+'''
 
+# main
+# ultrasonic sensor
 try:
     while True:
         GPIO.setmode(GPIO.BCM)
@@ -76,7 +90,7 @@ try:
         while GPIO.input(echo) == 0:
             pulse_start = time.time()
 
-        while GPIO.input(echo) == 1:
+        while GPIO.input(echo) == 1: 
             pulse_end = time.time()
 
 
@@ -84,16 +98,24 @@ try:
         distance = pulse_duration * 17000
         distance = round(distance, 2)
 
+        # TODO: distance value modify plzzzzzzzzz
         if distance < 5:
-            print("Outsider is detected!")
-            #with picamera.PiCamera() as camera:
-            takeapicture()
-            upload_to_aws('/home/pi/' + filename, 'housekeeper', filename)
-            insert()
-        
+            nowtime = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+            filename = 'outsider_' + datetime.today().strftime("%Y-%m-%d_%H-%M-%S") + '.jpg'
+            camera_filename = "/home/pi/Outsider/" + filename
+            s3_url_name = "https://housekeeper.s3.ap-northeast-2.amazonaws.com/" + filename
 
+            print("Outsider is detected!")
+            
+            #with picamera.PiCamera() as camera:
+            take_a_picture()
+            upload_to_aws(camera_filename, 'housekeeper', filename) # (local_file, bucket, s3_file)
+            #insert(filename, nowtime)
+            faceapi_outsider.func(s3_url_name, nowtime)
+            
+            time.sleep(0.1)
+            
+            
 except KeyboardInterrupt:
         GPIO.cleanup()
-
-
 

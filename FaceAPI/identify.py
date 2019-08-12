@@ -2,7 +2,7 @@ import httplib, urllib, base64
 import json
 
 
-def confidence_func(faceId):
+def confidence_func(faceId, personGroupId):
     
     headers = {
         # Request headers
@@ -10,7 +10,7 @@ def confidence_func(faceId):
     }
 
     body = {
-        "personGroupId": "housekeeper-python",
+        "personGroupId": personGroupId,
         "faceIds": [
             str(faceId),
         ],
@@ -29,12 +29,12 @@ def confidence_func(faceId):
         conn.request("POST", "/face/v1.0/identify?%s" % params, str(body), headers)
         response = conn.getresponse()
         data = response.read()
-        print(data)
+        #print(data)
         dataStream = json.loads(data)
         candidates = dataStream[0]['candidates']
         print("=== confidence result === ")
         print(candidates[0]['confidence'])
-        print(type(candidates[0]['confidence']))
+        #print(type(candidates[0]['confidence']))
         conn.close()
         return candidates[0]['confidence']
         
@@ -44,7 +44,7 @@ def confidence_func(faceId):
 
 
 
-def func(faceId):
+def func(faceId, personGroupId):
     
     headers = {
         # Request headers
@@ -52,7 +52,7 @@ def func(faceId):
     }
 
     body = {
-        "personGroupId": "housekeeper-python",
+        "personGroupId": personGroupId,
         "faceIds": [
             str(faceId),
         ],

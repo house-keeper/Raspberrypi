@@ -1,39 +1,34 @@
-import RPi.GPIO as GPIO
-import time
 import sys
+import time
+import RPi.GPIO as GPIO
 from datetime import datetime
 
 import pymysql.cursors
+
 # Connect to the database
 conn = pymysql.connect(host='jsmdbinstance.cmunz4rplqqo.ap-northeast-2.rds.amazonaws.com',
-                             user='jsm',
-                             password='jsmzzang',
-                             db='housekeeper'
-                             #, charset='CHAR_SET'
-                             )
+                        user='jsm',
+                        password='jsmzzang',
+                        db='housekeeper'
+                        #, charset='CHAR_SET'
+                        )
 
+# window open/close insert mysql database
 def insert(status):
-    now = datetime.now()
-    nowtime = now.strftime('%Y-%m-%d %H:%M:%S')
-
     try:
         with conn.cursor() as cursor:
-            # Read a single record
             sql = "INSERT INTO window (window_time, window_status) VALUES (%s, %s)"
-            cursor.execute(sql, (nowtime, status))
+            cursor.execute(sql, (datetime.today().strftime("%Y-%m-%d %H:%M:%S"), status))
             conn.commit()
-            #result = cursor.fetchone()
-            print("insert success")
+            print("DB insert success")
     finally:
         #conn.close()
         print(" ")
 
 
-
-
+# main
+# magnetic sensor
 GPIO.setmode(GPIO.BCM)
-
-#pin.DOOR_SENSOR_PIN = 18
 
 isOpen = None
 oldIsOpen = None
@@ -46,12 +41,13 @@ while True:
     isOpen = GPIO.input(18)
     
     if(isOpen and (isOpen != oldIsOpen)):
-        insert('1')
         print "window is open"
+        insert('1')
+        
     elif (isOpen != oldIsOpen):
-        insert('0')
         print "window is closed"
-
+        insert('0')
+        
     time.sleep(0.1)
     
 conn.close()

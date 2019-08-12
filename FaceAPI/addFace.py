@@ -1,7 +1,7 @@
 import httplib, urllib, base64
 import json
 
-def func(personId, photo):
+def func(personId, photo, personGroupId):
 
     headers = {
         # Request headers
@@ -23,7 +23,7 @@ def func(personId, photo):
 
     try:
         conn = httplib.HTTPSConnection('koreacentral.api.cognitive.microsoft.com')
-        conn.request("POST", "/face/v1.0/persongroups/housekeeper-python/persons/%s/persistedFaces?%s" % (personId, params), str(body), headers)
+        conn.request("POST", "/face/v1.0/persongroups/%s/persons/%s/persistedFaces?%s" % (personGroupId, personId, params), str(body), headers)
         response = conn.getresponse()
         data = response.read()
         #print(data)

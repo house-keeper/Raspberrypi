@@ -1,6 +1,7 @@
-from socket import *
 import time
 import RPi.GPIO as GPIO
+
+from socket import *
 
 GPIO.setmode(GPIO.BOARD)
     
@@ -23,8 +24,7 @@ halfstep_seq_up = [
 
 halfstep_seq_down = halfstep_seq_up[::-1]
 
-
-ctrCmd = ['1','0']
+ctrCmd = ['1', '0'] # 1 : open / 0 : close
 
 HOST = ''
 PORT = 8080
@@ -35,6 +35,7 @@ tcpSerSock = socket(AF_INET, SOCK_STREAM)
 tcpSerSock.bind(ADDR)
 tcpSerSock.listen(5)
 
+
 while True:
         print 'Waiting for connection'
         tcpCliSock, addr = tcpSerSock.accept()
@@ -43,8 +44,10 @@ while True:
                 while True:
                         data = ''
                         data = tcpCliSock.recv(BUFSIZE)
+                        
                         if not data:
                                 break
+                                
                         if data == ctrCmd[0]:
                             for i in range(512):
                                 for halfstep in range(8):
@@ -52,6 +55,7 @@ while True:
                                         GPIO.output(control_pins[pin], halfstep_seq_up[halfstep][pin])
                                     time.sleep(0.001)
                             print 'window is open'
+                            
                         if data == ctrCmd[1]:
                             for i in range(512):
                                 for halfstep in range(8):
@@ -59,7 +63,10 @@ while True:
                                         GPIO.output(control_pins[pin], halfstep_seq_down[halfstep][pin])
                                     time.sleep(0.001)    
                             print 'window is close'
+                            
         except KeyboardInterrupt:
                 GPIO.cleanup()
+                
+                
 tcpSerSock.close();
 

@@ -11,7 +11,7 @@ for pin in control_pins:
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, 0)
     
-halfstep_seq_up = [
+halfstep_seq_down = [
     [1,0,0,0],
     [1,1,0,0],
     [0,1,0,0],
@@ -22,7 +22,7 @@ halfstep_seq_up = [
     [1,0,0,1]
 ]
 
-halfstep_seq_down = halfstep_seq_up[::-1]
+halfstep_seq_up = halfstep_seq_down[::-1]
 
 ctrCmd = ['1', '0'] # 1 : open / 0 : close
 
@@ -49,7 +49,7 @@ while True:
                                 break
                                 
                         if data == ctrCmd[0]:
-                            for i in range(512):
+                            for i in range(380):
                                 for halfstep in range(8):
                                     for pin in range(4):
                                         GPIO.output(control_pins[pin], halfstep_seq_up[halfstep][pin])
@@ -57,7 +57,7 @@ while True:
                             print 'window is open'
                             
                         if data == ctrCmd[1]:
-                            for i in range(512):
+                            for i in range(380):
                                 for halfstep in range(8):
                                     for pin in range(4):
                                         GPIO.output(control_pins[pin], halfstep_seq_down[halfstep][pin])

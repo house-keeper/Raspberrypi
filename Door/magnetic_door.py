@@ -33,12 +33,12 @@ GPIO.setmode(GPIO.BCM)
 isOpen = None
 oldIsOpen = None
 
-GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+GPIO.setup(25, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 while True:
     
     oldIsOpen = isOpen
-    isOpen = GPIO.input(18)
+    isOpen = GPIO.input(25)
     
     if(isOpen and (isOpen != oldIsOpen)):
         print "door is open"

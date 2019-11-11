@@ -96,6 +96,7 @@ while True:
                 print result
                 
                 naverTTS(result, '/home/pi/tts.mp3')  
+                # need tts.mp3
                 os.system("mpg321 /home/pi/tts.mp3")
 
 
@@ -112,6 +113,7 @@ while True:
                 #print record_file + ' download success'
 
                 # convert mp4 to mp3
+                # need record.mp3
                 call(["mplayer", "-novideo", "-nocorrect-pts", "-ao", "pcm:waveheader", "/home/pi/"+record_file])
                 call(["lame", "-v", "/home/pi/Raspberrypi/TTS,STT/audiodump.wav", "/home/pi/Raspberrypi/TTS,STT/record.mp3"])
                 os.remove("/home/pi/Raspberrypi/TTS,STT/audiodump.wav")

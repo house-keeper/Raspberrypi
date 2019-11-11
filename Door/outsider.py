@@ -99,7 +99,7 @@ try:
         distance = round(distance, 2)
 
         # TODO: distance value modify plzzzzzzzzz
-        if distance < 5:
+        if distance < 30:
             nowtime = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
             filename = 'outsider_' + datetime.today().strftime("%Y-%m-%d_%H-%M-%S") + '.jpg'
             camera_filename = "/home/pi/Outsider/" + filename

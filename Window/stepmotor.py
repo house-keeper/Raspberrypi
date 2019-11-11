@@ -52,7 +52,7 @@ while True:
                                 break
                                 
                         if data == ctrCmd[0]:
-                            for i in range(380):
+                            for i in range(300):
                                 for halfstep in range(8):
                                     for pin in range(4):
                                         GPIO.output(control_pins[pin], halfstep_seq_up[halfstep][pin])
@@ -60,7 +60,7 @@ while True:
                             print 'window is open\n'
                             
                         if data == ctrCmd[1]:
-                            for i in range(380):
+                            for i in range(300):
                                 for halfstep in range(8):
                                     for pin in range(4):
                                         GPIO.output(control_pins[pin], halfstep_seq_down[halfstep][pin])

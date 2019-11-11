@@ -1,11 +1,11 @@
 import httplib, urllib, base64
 
-personGroupId = 'db-test'
+personGroupId = 'housekeeper2'
 
 body = {}
 headers = {
     # Request headers
-    'Ocp-Apim-Subscription-Key': '6bc77c1f5ad742a2b57a1f0f809ec7d0',
+    'Ocp-Apim-Subscription-Key': 'fe7195ca4dfd478b8078eecfa1c5b0df',
 }
 
 params = urllib.urlencode({

@@ -5,7 +5,7 @@ import re
 
 headers = {
     # Request headers
-    'Ocp-Apim-Subscription-Key': '6bc77c1f5ad742a2b57a1f0f809ec7d0',
+    'Ocp-Apim-Subscription-Key': 'fe7195ca4dfd478b8078eecfa1c5b0df',
 }
 
 body = {}
@@ -18,7 +18,7 @@ params = urllib.urlencode({
 
 try:
     conn = httplib.HTTPSConnection('koreacentral.api.cognitive.microsoft.com')
-    conn.request("GET", "/face/v1.0/persongroups/db-test/persons?%s" % params, str(body), headers)
+    conn.request("GET", "/face/v1.0/persongroups/housekeeper2/persons?%s" % params, str(body), headers)
     response = conn.getresponse()
     data = response.read()
 #    print (json.dumps(data, sort_keys=True, indent=2, seperators=(',',': ')))
@@ -31,7 +31,7 @@ try:
     #print(sortdata)
     print("lastest outsider number!!!")
     print(sortdata[-1]['name'])
-    number = re.findall("\d+", sortdata[-1]['name'])
+    number = re.findall("\d+", sortdata[0]['name'])
     print(number[0])
     print(type(number[0]))
     print(type(int(number[0])))

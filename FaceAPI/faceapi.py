@@ -36,8 +36,9 @@ def insert(outsider_name):
         print(" ")                             
                              
                              
-photo = "/home/pi/Outsider/outsider_2019-08-08_08-26-38.jpg"
-personGroupId = "db-test"
+photo = "https://housekeeper.s3.ap-northeast-2.amazonaws.com/outsider_2019-10-22_18-02-53.jpg"
+
+personGroupId = "housekeeper2"
 
 
 faceId = faceDetection.func(photo)

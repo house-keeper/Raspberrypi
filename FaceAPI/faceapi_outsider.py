@@ -41,7 +41,7 @@ def func(camera_filename, nowtime) :
 	                             
 	photo = str(camera_filename)
 	#print(
-	personGroupId = "db-test"
+	personGroupId = "housekeeper2"
 
 
 	faceId = faceDetection.func(photo)
@@ -67,7 +67,10 @@ def func(camera_filename, nowtime) :
 			
 			# TODO: name modify plz!!!!! auto increment
 			number = findNumber.func(personGroupId)
+			#nonnumber = 2
 			outsider_name = "outsider" + str(number + 1)
+			#outsider_name = "outsider" + nonnumber
+			#nonnumber++
 			
 			personId = addPerson.func(personGroupId, outsider_name)
 			print("addPerson.py / personId => %s" % personId)

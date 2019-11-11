@@ -7,7 +7,7 @@ def func(personGroupId) :
     
     headers = {
         # Request headers
-        'Ocp-Apim-Subscription-Key': '6bc77c1f5ad742a2b57a1f0f809ec7d0',
+        'Ocp-Apim-Subscription-Key': 'fe7195ca4dfd478b8078eecfa1c5b0df',
     }
 
     body = {}
@@ -24,14 +24,15 @@ def func(personGroupId) :
         
         dataStream = json.loads(data)
         
-        sortdata = sorted(dataStream, key = itemgetter('name'))
+        sortdata = sorted(dataStream, key = itemgetter('name'), reverse=False)
         #print(sortdata)
         #print("lastest outsider number!!!")
         #print(sortdata[-1]['name'])
         number = re.findall("\d+", sortdata[-1]['name'])
         #print(number[0])
-        conn.close()
+        #conn.close()
         return int(number[0])
+        #print sortdata
         
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))

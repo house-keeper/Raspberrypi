@@ -21,14 +21,10 @@ server_socket.listen(5)
 confirm_data = ''
 
 
-
-
 ################################
 print 'Start cam & outsider program'
 
-
-while True:
-        
+while True:   
             try:
                 print 'sign.py Waiting for connection'
                 #if 'yes' signal from android
@@ -39,12 +35,8 @@ while True:
             except error:
                 print 'connection error'
                 break
-            
-            
+                        
             if confirm_data == ctrCmd[1]: #NO streaming
-                #os.system("sudo pkill -f ./mjpg.sh")
-                #os.system("sudo pkill -9 -ef mjpg_streamer")                
-                #os.system("fuser -k 8091/tcp")
                 os.system("sudo pkill mjpg.sh")
                 os.system("sudo pkill mjpg_streamer")
                 
@@ -52,19 +44,13 @@ while True:
                 print("outsider detect on")
                 os.system("sudo python outsider.py &")
                                                           
-                     
             elif confirm_data == ctrCmd[0]: #YES streaming
                 os.system("sudo pkill -f outsider.py")
                 print("outsider detect off")
-                #os.system("sudo pkill -9 -ef mjpg_streamer")                
-                #os.system("sudo pkill -e ffserver")
                 print("streaming on")
-                os.system("./mjpg.sh &")
-                #subprocess.call("sh mjpg.sh", shell=True)
+                os.system("./mjpg.sh &")                
                 
-                
-            elif confirm_data == '': 
-                #os.system("sudo pkill -9 -ef mjpg_streamer")                
+            elif confirm_data == '':             
                 continue
 
 server_socket.close()

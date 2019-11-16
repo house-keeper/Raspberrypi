@@ -19,9 +19,6 @@ def confidence_func(faceId, personGroupId):
 
     params = urllib.urlencode({
         # Request parameters
-    #    'start': '{string}',
-    #    'top': '1000',
-    #    'returnRecognitionModel': 'false',
     })
 
     try:
@@ -29,12 +26,10 @@ def confidence_func(faceId, personGroupId):
         conn.request("POST", "/face/v1.0/identify?%s" % params, str(body), headers)
         response = conn.getresponse()
         data = response.read()
-        #print(data)
         dataStream = json.loads(data)
         candidates = dataStream[0]['candidates']
         print("=== confidence result === ")
         print(candidates[0]['confidence'])
-        #print(type(candidates[0]['confidence']))
         conn.close()
         return candidates[0]['confidence']
         
@@ -61,9 +56,6 @@ def func(faceId, personGroupId):
 
     params = urllib.urlencode({
         # Request parameters
-    #    'start': '{string}',
-    #    'top': '1000',
-    #    'returnRecognitionModel': 'false',
     })
 
     try:
@@ -71,10 +63,8 @@ def func(faceId, personGroupId):
         conn.request("POST", "/face/v1.0/identify?%s" % params, str(body), headers)
         response = conn.getresponse()
         data = response.read()
-        #print(data)
         dataStream = json.loads(data)
         candidates = dataStream[0]['candidates']
-        #print(candidates[0]['personId'])
         conn.close()
         return candidates[0]['personId']
         

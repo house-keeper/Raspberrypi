@@ -29,20 +29,16 @@ def insert(photo, nowtime, outsider_name):
             sql = "INSERT INTO outsider (photo, time, name) VALUES (%s, %s, %s)"
             cursor.execute(sql, (photo, nowtime, outsider_name))
             conn.commit()
-            #result = cursor.fetchone()
             print("DB insert success")
 
     finally:
-        #conn.close()
         print(" ")                             
                              
 
 def func(camera_filename, nowtime) :
 	                             
 	photo = str(camera_filename)
-	#print(
 	personGroupId = "housekeeper2"
-
 
 	faceId = faceDetection.func(photo)
 
@@ -65,25 +61,16 @@ def func(camera_filename, nowtime) :
 		elif confidence < 0.7 :
 			print("confidence is too lowwwwwwwww")
 			
-			# TODO: name modify plz!!!!! auto increment
 			number = findNumber.func(personGroupId)
-			#nonnumber = 2
 			outsider_name = "outsider" + str(number + 1)
-			#outsider_name = "outsider" + nonnumber
-			#nonnumber++
 			
 			personId = addPerson.func(personGroupId, outsider_name)
 			print("addPerson.py / personId => %s" % personId)
 			insert(photo, nowtime, outsider_name)
 
-
-		# only first time / add person group 
-		#personId = addPerson.func(personGroupId)
-
-
+			
 		persistedFaceId = addFace.func(personId, photo, personGroupId)
 		print("addFace.py / persistedFaceId => %s" % persistedFaceId)
-
 
 		train.func(personGroupId)
 		print("=== train.py COMPLETE")

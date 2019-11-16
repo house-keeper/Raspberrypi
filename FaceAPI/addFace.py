@@ -16,9 +16,6 @@ def func(personId, photo, personGroupId):
 
     params = urllib.urlencode({
         # Request parameters
-    #    'userData': '{string}',
-    #    'targetFace': '{string}',
-    #    'detectionModel': 'detection_01',
     })
 
     try:
@@ -26,9 +23,7 @@ def func(personId, photo, personGroupId):
         conn.request("POST", "/face/v1.0/persongroups/%s/persons/%s/persistedFaces?%s" % (personGroupId, personId, params), str(body), headers)
         response = conn.getresponse()
         data = response.read()
-        #print(data)
         dataStream = json.loads(data)
-        #print(dataStream['persistedFaceId'])
         conn.close()
         return dataStream['persistedFaceId']
         

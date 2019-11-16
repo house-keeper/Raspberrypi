@@ -15,13 +15,9 @@ def func(photo):
     }
 
     params = urllib.urlencode({
-        # Request parameters
         'returnFaceId': 'true',
-        # 'returnFaceLandmarks': 'false',
         'returnFaceAttributes': 'hair',
         'recognitionModel': 'recognition_02',
-        # 'returnRecognitionModel': 'false',
-        # 'detectionModel': 'detection_01',
     })
 
     try:
@@ -29,18 +25,12 @@ def func(photo):
         conn.request("POST", "/face/v1.0/detect?%s" % params, str(body), headers)
         response = conn.getresponse()
         data = response.read()
-        #print(data)
         dataStream = json.loads(data)
-        #print(dataStream[0]['faceId'])
         conn.close()
         
         if not dataStream :
-            #print('face cannot detected!!!')
-            #print(dataStream)
             return 0
         else :
-            #print('face detected well')
-            #print(data)
             return dataStream[0]['faceId']
 
     except Exception as e:
